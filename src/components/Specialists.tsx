@@ -2,15 +2,15 @@ function Specialists() {
   const specialists = [
     {
       name: 'Psicologia',
-      image: 'https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg?auto=compress&cs=tinysrgb&w=400'
+      image: '/src/assets/images/psicologia.png'
     },
     {
       name: 'Urologia',
-      image: 'https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=400'
+      image: '/src/assets/images/urologia.png'
     },
     {
       name: 'Dermatologia',
-      image: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=400'
+      image: '/src/assets/images/dermatologia.png'
     }
   ];
 
@@ -19,7 +19,7 @@ function Specialists() {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-white text-4xl font-bold">
-            " Palavra do Especialista"
+            "Conheça os especialistas"
           </h2>
         </div>
 
@@ -45,8 +45,12 @@ function Specialists() {
           ))}
         </div>
 
-        <div className="flex items-center justify-start">
-          <span className="text-white font-bold text-2xl">H⊕MIN+</span>
+        <div className="flex items-center justify-start mt-8">
+          <img 
+            src="/src/assets/images/logo.png" 
+            alt="HOMIN+ Logo" 
+            className="h-24 md:h-32 w-auto"
+          />
         </div>
       </div>
     </section>

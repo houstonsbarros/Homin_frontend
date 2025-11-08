@@ -14,13 +14,11 @@ const Login = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  // Check if admin login is requested
   useEffect(() => {
     const isAdminLogin = searchParams.get('admin') === 'true';
     const roleParam = searchParams.get('role');
     
     if (isAdminLogin) {
-      // Pre-fill admin email but not password
       setEmail('homiin.saude@gmail.com');
       setPassword('');
     } else if (roleParam === 'user') {
@@ -29,7 +27,6 @@ const Login = () => {
     }
   }, [searchParams]);
 
-  // Check if this is an admin login attempt
   const isAdminLogin = searchParams.get('admin') === 'true';
 
 
@@ -58,7 +55,6 @@ const Login = () => {
     }
   };
 
-  // Efeito para desabilitar a rolagem da página
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {

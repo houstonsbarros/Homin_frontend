@@ -11,11 +11,11 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto mb-16">
           <div className="bg-white rounded-3xl p-16 flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
             <div className="text-center">
-              <h3 className="text-6xl font-bold text-blue-500 tracking-tight">
-                H<span className="inline-flex items-center justify-center w-14 h-14 rounded-full border-4 border-blue-500 mx-1">
-                  <span className="text-3xl text-blue-500">⊕</span>
-                </span>MIN+
-              </h3>
+              <img 
+                src="/src/assets/images/logo2.png" 
+                alt="HOMIN+ Logo" 
+                className="h-40 md:h-52 w-auto"
+              />
             </div>
           </div>
 

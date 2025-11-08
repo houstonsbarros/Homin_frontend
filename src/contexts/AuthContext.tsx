@@ -25,7 +25,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Default admin user
 const ADMIN_USER: AuthUser = {
   email: 'homiin.saude@gmail.com',
   username: 'Admin',
@@ -33,7 +32,6 @@ const ADMIN_USER: AuthUser = {
   role: 'admin' as const,
 };
 
-// Default regular user
 const DEFAULT_USER: AuthUser = {
   email: 'arthur@gmail.com',
   username: 'Arthur',
@@ -43,17 +41,14 @@ const DEFAULT_USER: AuthUser = {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    // Check if user is logged in from localStorage
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : null;
   });
   const [users, setUsers] = useState([ADMIN_USER, DEFAULT_USER]);
 
   const login = async (email: string, password: string) => {
-    // Normalize email to handle case sensitivity
     const normalizedEmail = email.toLowerCase().trim();
     
-    // Check if it's the default admin user
     if (normalizedEmail === ADMIN_USER.email.toLowerCase() && password === ADMIN_USER.password) {
       const userData = {
         uid: 'admin-1',
@@ -66,7 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    // Check if it's the default user
     if (normalizedEmail === DEFAULT_USER.email.toLowerCase() && password === DEFAULT_USER.password) {
       const userData = {
         uid: 'user-1',
@@ -79,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    // Check other users
     const foundUser = users.find(
       (u) => u.email === email && u.password === password
     );
@@ -100,12 +93,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (email: string, password: string, username: string) => {
-    // Check if email already exists
     if (users.some((u) => u.email === email)) {
       throw new Error('Este email já está em uso');
     }
 
-    // Check if username already exists
     if (users.some((u) => u.username === username)) {
       throw new Error('Este nome de usuário já está em uso');
     }
@@ -119,7 +110,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUsers((prev) => [...prev, newUser]);
     
-    // Auto-login after registration
     const userData = {
       uid: `user-${Date.now()}`,
       username,
@@ -135,7 +125,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithGoogle = async (userData: Omit<User, 'role'> & { role?: 'user' | 'admin' }) => {
     try {
-      // Default role is 'user' if not specified
       const role = userData.role || 'user';
       
       const userToSave = {

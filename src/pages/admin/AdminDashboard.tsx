@@ -8,41 +8,27 @@ interface FileItem {
   size: number;
   uploadedAt: string;
   type: string;
-  file?: File; // Store the actual file object for download
-}
-
-interface ChatConversation {
-  id: string;
-  user: string;
-  lastMessage: string;
-  timestamp: string;
-  unread: number;
+  file?: File;
 }
 
 export function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileItem[]>([]);
-  const [activeChats, setActiveChats] = useState<ChatConversation[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Redirect if not admin
   useEffect(() => {
     if (user?.role !== 'admin') {
       navigate('/');
     }
   }, [user, navigate]);
 
-  // Load files from localStorage on component mount
   useEffect(() => {
     const savedFiles = localStorage.getItem('adminFiles');
     if (savedFiles) {
       setFiles(JSON.parse(savedFiles));
     }
-    
-    // Start with empty conversations
-    setActiveChats([]);
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,28 +40,24 @@ export function AdminDashboard() {
   const handleUpload = async () => {
     if (!selectedFile) return;
     
-    // Simulate file upload
     for (let i = 0; i <= 100; i += 10) {
       await new Promise(resolve => setTimeout(resolve, 100));
       setUploadProgress(i);
     }
     
-    // Create new file object
     const newFile: FileItem = {
       id: Date.now().toString(),
       name: selectedFile.name,
       size: selectedFile.size,
       uploadedAt: new Date().toISOString(),
       type: selectedFile.name.split('.').pop()?.toUpperCase() || 'FILE',
-      file: selectedFile  // Store the actual file object for download
+      file: selectedFile
     };
     
-    // Add to files list and save to localStorage
     const updatedFiles = [...files, newFile];
     setFiles(updatedFiles);
     localStorage.setItem('adminFiles', JSON.stringify(updatedFiles));
     
-    // Reset form
     setUploadProgress(0);
     setSelectedFile(null);
   };
@@ -138,7 +120,7 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Gerenciamento de Arquivos */}
+        {}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="p-6 border-b">
             <h2 className="text-lg font-medium text-gray-900">Gerenciamento de Arquivos</h2>
@@ -254,109 +236,9 @@ export function AdminDashboard() {
             </div>
           </div>
         
-        {/* Conversas Ativas */}
+        {}
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-medium text-gray-900">Conversas Ativas</h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Monitore e interaja com as conversas em andamento.
-            </p>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-1">
-                <div className="border rounded-lg overflow-hidden">
-                  <div className="p-4 border-b bg-gray-50">
-                    <h3 className="text-md font-medium text-gray-900">Lista de Conversas</h3>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {activeChats.length} conversa{activeChats.length !== 1 ? 's' : ''} ativa{activeChats.length !== 1 ? 's' : ''}
-                    </p>
-                  </div>
-                  <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
-                    {activeChats.length === 0 ? (
-                      <div className="p-6 text-center">
-                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                        </svg>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhuma conversa ativa</h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          Quando houver conversas ativas, elas aparecerão aqui.
-                        </p>
-                      </div>
-                    ) : (
-                      activeChats.map((chat) => (
-                        <div key={chat.id} className="p-4 hover:bg-gray-50 cursor-pointer">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="text-sm font-medium text-gray-900">{chat.user}</h3>
-                              <p className="text-sm text-gray-500 truncate max-w-xs">{chat.lastMessage}</p>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-xs text-gray-500">{chat.timestamp}</span>
-                              {chat.unread > 0 && (
-                                <span className="mt-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
-                                  {chat.unread}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="lg:col-span-2">
-                <div className="border rounded-lg overflow-hidden h-full flex flex-col">
-                  <div className="p-4 border-b bg-gray-50">
-                    <h3 className="text-md font-medium text-gray-900">Visualização do Chat</h3>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {activeChats.length > 0 ? 'Selecione uma conversa para visualizar' : 'Nenhuma conversa ativa no momento'}
-                    </p>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center p-8 bg-white">
-                    <div className="text-center">
-                      <svg className="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d={
-                          activeChats.length > 0 
-                            ? "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" 
-                            : "M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        } />
-                      </svg>
-                      <h3 className="mt-2 text-sm font-medium text-gray-700">
-                        {activeChats.length > 0 
-                          ? 'Nenhuma conversa selecionada' 
-                          : 'Nenhuma conversa ativa'}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {activeChats.length > 0 
-                          ? 'Selecione uma conversa da lista para visualizar as mensagens.'
-                          : 'Quando houver conversas ativas, você poderá visualizá-las aqui.'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-4 border-t bg-gray-50">
-                    <div className="flex items-center">
-                      <input
-                        type="text"
-                        placeholder="Digite uma mensagem..."
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        disabled={activeChats.length === 0}
-                      />
-                      <button
-                        type="button"
-                        className={`px-4 py-2 border border-l-0 border-gray-300 ${activeChats.length > 0 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-500'} rounded-r-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                        disabled={activeChats.length === 0}
-                      >
-                        Enviar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>

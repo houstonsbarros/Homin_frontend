@@ -1,6 +1,14 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
 import { User } from '../contexts/AuthContext';
+import AccessibilityToolbar from './AccessibilityToolbar';
+
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 type HeaderProps = {
   user: User;
@@ -10,7 +18,19 @@ type HeaderProps = {
 
 function Header({ user, onLogout }: HeaderProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  const handleNavigation = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        scrollToSection(sectionId);
+      }, 100);
+    } else {
+      scrollToSection(sectionId);
+    }
+  };
 
   return (
     <header className="bg-white shadow-sm">
@@ -18,15 +38,24 @@ function Header({ user, onLogout }: HeaderProps) {
         <nav className="flex items-center justify-between">
           {!isAuthPage && (
             <div className="flex items-center space-x-8">
-              <Link to="/" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+              <button 
+                onClick={() => handleNavigation('hero')}
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+              >
                 Início
-              </Link>
-              <Link to="/#especialistas" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+              </button>
+              <button 
+                onClick={() => handleNavigation('especialistas')}
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+              >
                 Especialistas
-              </Link>
-              <Link to="/#sobre" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
-                Sobre
-              </Link>
+              </button>
+              <button 
+                onClick={() => handleNavigation('equipe')}
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+              >
+                Equipe
+              </button>
               {user?.role === 'admin' && (
                 <Link to="/admin" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
                   Admin
@@ -34,9 +63,17 @@ function Header({ user, onLogout }: HeaderProps) {
               )}
             </div>
           )}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             {user ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <img 
+                  src="/src/assets/images/logo.png" 
+                  alt="HOMIN+ Logo" 
+                  className="h-8 md:h-10 w-auto"
+                />
+                <div className="hidden md:block">
+                  <AccessibilityToolbar />
+                </div>
                 <ProfileDropdown user={user} onLogout={onLogout} />
               </div>
             ) : (

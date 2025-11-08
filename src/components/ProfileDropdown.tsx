@@ -10,7 +10,6 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -24,7 +23,6 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
     };
   }, []);
 
-  // Get initials from username
   const getInitials = (name: string) => {
     return name
       .split(' ')

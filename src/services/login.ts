@@ -7,7 +7,7 @@ export function socialLoginBackend() {
     next = next.replace("//auth/callback", "/auth/callback");
   }
 
-  const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
+  const BACKEND_ORIGIN = import.meta.env.VITE_APP_BACKEND_ORIGIN;
 
   let url = `${BACKEND_ORIGIN}/auth/login?next=${encodeURIComponent(next)}`;
 
